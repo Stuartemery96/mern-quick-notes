@@ -6,10 +6,12 @@ import AuthPage from '../AuthPage/AuthPage';
 import NewOrderPage from '../NewOrderPage/NewOrderPage';
 import OrderHistoryPage from '../OrderHistoryPage/OrderHistoryPage';
 import NavBar from '../../components/NavBar/NavBar';
+import NotePage from '../NotePage/NotePage';
 
 
 export default function App() {
   const [user, setUser] = useState(getUser());
+  const [notes, setNotes] = useState([]);
 
   return (
     <main className="App">
@@ -18,8 +20,9 @@ export default function App() {
           <NavBar user={user} setUser={setUser} />
           <Routes>
             {/* Route Complnents in here */}
-            <Route path="/orders/new" element={<NewOrderPage />}/>
+            <Route path="/" element={<NotePage user={user} notes={notes} />}/>
             <Route path="/orders" element={<OrderHistoryPage />}/>
+            <Route path="/orders/new" element={<NewOrderPage />}/>
           </Routes>
         </>
         :
