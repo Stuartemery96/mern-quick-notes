@@ -10,6 +10,7 @@ const ensureLoggedIn = require('../../config/ensureLoggedIn')
 router.get('/', ensureLoggedIn, notesCtrl.index);
 // post ('/create')
 router.post('/create', ensureLoggedIn, notesCtrl.create)
+router.delete('/:noteId', ensureLoggedIn, notesCtrl.delete)
 
 
 module.exports = router;

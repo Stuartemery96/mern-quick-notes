@@ -3,8 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import { getUser } from '../../utilities/users-service';
 import './App.css';
 import AuthPage from '../AuthPage/AuthPage';
-import NewOrderPage from '../NewOrderPage/NewOrderPage';
-import OrderHistoryPage from '../OrderHistoryPage/OrderHistoryPage';
 import NavBar from '../../components/NavBar/NavBar';
 import NotePage from '../NotePage/NotePage';
 import * as notesApi from '../../utilities/notes-api'
@@ -13,6 +11,7 @@ import * as notesApi from '../../utilities/notes-api'
 export default function App() {
   const [user, setUser] = useState(getUser());
   const [notes, setNotes] = useState([]);
+  const [sortOrder, setSortOrder] = useState(false);
 
   useEffect(() => {
     async function getAllNotes() {
@@ -20,12 +19,28 @@ export default function App() {
       setNotes(allNotes);
     } 
     getAllNotes()
-  }, [])
+  }, []);
 
   async function handleCreateNote(newNote) {
     const note = await notesApi.createNote(newNote);
     setNotes([...notes, note]);
   };
+
+  async function handleDeleteNote(noteId) {
+    const allNotes = await notesApi.deleteNote(noteId);
+    setNotes(allNotes);
+  }
+
+  async function HandleSort() {
+    const sortedNotes = sortOrder ? notes.sort((a, b) => 
+      new Date(b.createdAt) - new Date(a.createdAt)
+      ) : notes.sort((a, b) => 
+      new Date(a.createdAt) - new Date(b.createdAt)
+      ) ;
+      setSortOrder(!sortOrder);
+      setNotes(sortedNotes);
+  }
+
 
   return (
     <main className="App">
@@ -36,10 +51,9 @@ export default function App() {
             {/* Route Complnents in here */}
             <Route path="/" element={<NotePage
             notes={notes}
-            handleCreateNote={handleCreateNote} 
-            />}/>
-            <Route path="/orders" element={<OrderHistoryPage />}/>
-            <Route path="/orders/new" element={<NewOrderPage />}/>
+            handleCreateNote={handleCreateNote}
+            HandleSort={HandleSort}
+            handleDeleteNote={handleDeleteNote}/>}/>
           </Routes>
         </>
         :
